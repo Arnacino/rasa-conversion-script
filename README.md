@@ -4,7 +4,7 @@ A script to convert a Rasa chatbot from version 1.x to version 3.x.
 
 ## Requirements
 - Python
-- A virtual environment with **Rasa 2.x** installed
+- Rasa 2.x insatlled (either via a virtual environment or not)
 - An existing Rasa chatbot
 
 ## Important Notes
@@ -12,6 +12,6 @@ A script to convert a Rasa chatbot from version 1.x to version 3.x.
 
 ## Usage
 1. Download the script.
-2. Activate your virtual environment with Rasa 2.x in a terminal.
+2. (optional) Activate your virtual environment with Rasa 2.x in a terminal.
 3. Update the `SOURCE_DIR` variable in the script to point to the root folder of your chatbot.
 4. Run the script.
