@@ -9,7 +9,7 @@ import yaml
 # ============================================================
 
 SOURCE_DIR = Path(
-    r"C:\Users\samue\Desktop\Uni\Stage\TEST FINALI\diagrams2ai\presi da eclipse\dfi\Output0\en" + "\\"
+    r"C:\Users\samue\Desktop\Uni\Stage\TEST FINALI\bikeShop\dpwp\Output1\en" + "\\"
 )
 DATA_DIR = SOURCE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -141,7 +141,6 @@ def update_rasa_config(config_file: Path) -> None:
 def main() -> None:
     print("Conversione progetto Rasa")
 
-    # 1. Dati (NLU + Stories)
     run_command(
         [ sys.executable, "-m", "rasa", "data", "convert", "nlu",
           "-f", "yaml", f"--data={SOURCE_DIR}", f"--out={DATA_DIR}"],
@@ -152,10 +151,13 @@ def main() -> None:
             "-f", "yaml", f"--data={SOURCE_DIR}", f"--out={DATA_DIR}"],
         SOURCE_DIR
     )
+    run_command(
+        [sys.executable, "-m", "rasa", "data", "convert", "config"],
+        SOURCE_DIR
+    )
     rename_if_present("nlu_converted.yml", "nlu.yml")
     rename_if_present("stories_converted.yml", "stories.yml")
 
-    # 2. Domain
     source_domain = SOURCE_DIR / "domain.yml"
     temp_domain = DATA_DIR / "domain_converted.yml"
     convert_domain(source_domain, temp_domain)
@@ -165,25 +167,19 @@ def main() -> None:
     temp_domain.rename(final_domain)
     print(f"Domain aggiornato: {final_domain}")
 
-    # 3. Header di versione
     ensure_version_header(DATA_DIR / "nlu.yml")
     ensure_version_header(DATA_DIR / "stories.yml")
-    ensure_version_header(final_domain)
-
-    # 4. Pulizia file obsoleti
+    
     remove_legacy_md_files()
 
-    # 5. Config Rasa
-    run_command(
-        [sys.executable, "-m", "rasa", "data", "convert", "config"],
-        SOURCE_DIR
-    )
+    update_rasa_config(SOURCE_DIR / "config.yml")
+    
+    ensure_version_header(final_domain)
 
     rules_file = DATA_DIR / "rules.yml"
     ensure_version_header(rules_file)
 
-    update_rasa_config(SOURCE_DIR / "config.yml")
-
+    
     print("Conversione completata ")
 
 
